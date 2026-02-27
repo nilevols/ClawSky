@@ -1,0 +1,8 @@
+{
+  "openclaw": {
+    "reverse_proxy": "openclaw:8080"
+  },
+  "browser": {
+    "reverse_proxy": "chrome:9222"
+  }
+}

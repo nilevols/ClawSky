@@ -21,3 +21,19 @@ services:
     ports:
       - "9222:9222"
     shm_size: 2gb
+
+  caddy:
+    image: caddy:latest
+    container_name: clawsky-proxy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:
