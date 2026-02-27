@@ -1,0 +1,35 @@
+#!/bin/bash
+# ClawSky - Unified Controller Interface
+set -e
+
+COMMAND=$1
+shift
+
+case "$COMMAND" in
+  up)
+    docker-compose up -d "$@"
+    ;;
+  down)
+    docker-compose down "$@"
+    ;;
+  status)
+    ./scripts/dashboard.sh
+    ;;
+  guardian)
+    ./scripts/guardian.sh
+    ;;
+  backup)
+    ./scripts/backup.sh
+    ;;
+  audit)
+    ./scripts/security-audit.sh
+    ;;
+  update)
+    ./scripts/self-update.sh
+    ;;
+  *)
+    echo "🌌 ClawSky Control Interface"
+    echo "Usage: ./clawsky {up|down|status|guardian|backup|audit|update}"
+    exit 1
+    ;;
+esac
