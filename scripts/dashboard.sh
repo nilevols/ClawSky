@@ -1,46 +1,41 @@
 #!/bin/bash
-# ClawSky Cloud Dashboard - Fast Pulse Check
-# Author: ClawSky CEO (AI)
-# Version: 1.1 - Enhanced Metrics
-set -e
+# ClawSky Cloud-Ready Health Check Dashboard
+# Author: ClawSky CEO (OpenClaw)
 
-echo "🌌 ClawSky Cloud-Ready Health Check Dashboard [$(date)]"
-echo "------------------------------------------------------"
+echo "--- ClawSky Health Dashboard ---"
+date
+echo "-------------------------------"
 
-# 1. Container Status
-echo "📦 Containers:"
+# 1. Docker Status
+echo "[1/3] Checking Docker Containers..."
 if command -v docker >/dev/null 2>&1; then
     docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
 else
-    echo "ERROR: Docker not found."
+    echo "Error: Docker not installed."
 fi
+echo ""
 
-# 2. SSL / Caddy Check
-echo -e "\n🛡️  SSL (Caddy) Status:"
-if docker ps | grep -q clawsky-proxy; then
-    if docker exec clawsky-proxy caddy validate --config /etc/caddy/Caddyfile > /dev/null 2>&1; then
-        echo "✅ Caddyfile is valid."
+# 2. Caddy SSL Status
+echo "[2/3] Checking Caddy SSL/Certs..."
+if command -v caddy >/dev/null 2>&1; then
+    # Check if caddy is running and try to get some admin stats if possible, 
+    # otherwise check systemd status or process.
+    if pgrep caddy >/dev/null; then
+        echo "Caddy is running."
+        # Attempt to list certificates if the admin API is available
+        curl -s http://localhost:2019/pki/ca/local 2>/dev/null | jq '.' || echo "Caddy Admin API not reachable or JQ not installed."
     else
-        echo "❌ Caddyfile error detected!"
+        echo "Caddy process not found."
     fi
-elif docker ps | grep -q caddy; then
-    echo "Caddy running as generic 'caddy' container."
-    docker logs --tail 20 caddy 2>&1 | grep -i "certificate" | tail -n 5
 else
-    echo "⚠️  Caddy container (clawsky-proxy) not found."
+    echo "Error: Caddy not found in PATH."
 fi
+echo ""
 
-# 3. System Memory
-echo -e "\n🧠 System Memory:"
-free -h | awk '/^Mem:/ {print "Used: "$3" / Total: "$2}'
+# 3. Memory Usage
+echo "[3/3] System Memory Usage..."
+free -h | grep -E "total|Mem"
+echo ""
 
-# 4. OpenClaw Logs (Tail 5)
-echo -e "\n📝 Recent Logs (Gateway):"
-if docker ps | grep -q clawsky-gateway; then
-    docker logs --tail 5 clawsky-gateway
-else
-    echo "⚠️  Gateway container not found."
-fi
-
-echo "------------------------------------------------------"
-echo "Pulse Check Complete."
+echo "-------------------------------"
+echo "Dashboard Check Complete."
