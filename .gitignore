@@ -1,0 +1,27 @@
+# ClawSky .gitignore
+
+# Node modules
+node_modules/
+dist/
+
+# Logs
+logs/*.log
+*.log
+
+# Workspace (ignore local data)
+workspace/
+!workspace/IDENTITY.md
+!workspace/SOUL.md
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Private tokens & keys
+.env
+.env.local
+.env.*.local
+
+# Temp files
+.tmp/
+.cache/

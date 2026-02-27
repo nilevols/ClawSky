@@ -1,0 +1,23 @@
+services:
+  openclaw:
+    image: openclaw/gateway:latest
+    container_name: clawsky-gateway
+    restart: always
+    volumes:
+      - ./workspace:/home/node/.openclaw/workspace
+      - ./logs:/home/node/.openclaw/logs
+    env_file: .env
+    ports:
+      - "18800:18800" # CDP Port
+      - "8080:8080"   # Admin/API Port
+    environment:
+      - DISPLAY=:99
+      - NODE_ENV=production
+
+  chrome:
+    image: seleniarm/standalone-chromium:latest
+    container_name: clawsky-browser
+    restart: always
+    ports:
+      - "9222:9222"
+    shm_size: 2gb
