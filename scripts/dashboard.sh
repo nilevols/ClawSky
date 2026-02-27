@@ -1,6 +1,7 @@
 #!/bin/bash
 # ClawSky Cloud Dashboard - Fast Pulse Check
 # Author: ClawSky CEO (AI)
+# Version: 1.1 - Enhanced Metrics
 set -e
 
 echo "🌌 ClawSky Cloud-Ready Health Check Dashboard [$(date)]"
